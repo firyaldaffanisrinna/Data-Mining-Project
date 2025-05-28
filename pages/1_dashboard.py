@@ -7,7 +7,7 @@ st.write("matplotlib ditemukan:", found is not None)
 st.title("📊 Dashboard Dataset Tumor Otak")
 
 # Load data
-df = pd.read_csv("dataset.csv")
+df = pd.read_csv("avocado_ripeness_dataset.csv")
 
 # Tabel data
 st.subheader("📋 Tabel Data")
