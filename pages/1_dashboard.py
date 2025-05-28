@@ -31,7 +31,7 @@ colors = [warna_kategori.get(k, 'gray') for k in ripeness_counts.index]
 st.subheader("📊 Statistic Jumlah Data per Kematangan (Ripeness)")
 ripeness_counts = df['ripeness'].value_counts()
 fig, ax = plt.subplots()
-ax.bar(ripeness_counts.index, ripeness_counts.values, color=warna_kategori)
+ax.bar(ripeness_counts.index, ripeness_counts.values, color=color)
 ax.set_xlabel("Tingkat Kematangan")
 ax.set_ylabel("Jumlah Data")
 st.pyplot(fig)
