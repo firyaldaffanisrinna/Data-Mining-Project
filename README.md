@@ -9,4 +9,5 @@ Aplikasi Streamlit sederhana untuk menampilkan statistik dataset tumor otak.
 ```bash
 pip install -r requirement.txt
 streamlit run App.py
+pip install matplotlib
 
