@@ -8,6 +8,7 @@ st.title("📊 Dashboard Dataset Tumor Otak")
 
 # Load data
 df = pd.read_csv("avocado_ripeness_dataset.csv")
+st.write("Kolom tersedia:", df.columns.tolist())
 
 # Tabel data
 st.subheader("📋 Tabel Data")
@@ -18,10 +19,11 @@ st.subheader("📈 Statistik Ringkas")
 st.write(df.describe(include='all'))
 
 # Visualisasi
-st.subheader("📊 Visualisasi Jumlah File per Label")
+st.subheader("📊 Visualisasi Jumlah Data per Kematangan (Ripeness)")
+ripeness_counts = df['ripeness'].value_counts()
 fig, ax = plt.subplots()
-ax.bar(df['label'], df['number_of_files'], color='mediumseagreen')
-ax.set_xlabel("Jenis Tumor")
-ax.set_ylabel("Jumlah File")
-ax.set_title("Distribusi Data Gambar")
+ax.bar(ripeness_counts.index, ripeness_counts.values, color='mediumseagreen')
+ax.set_xlabel("Tingkat Kematangan")
+ax.set_ylabel("Jumlah Data")
 st.pyplot(fig)
+
