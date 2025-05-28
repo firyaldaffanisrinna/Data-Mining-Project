@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-
+import importlib.util
+found = importlib.util.find_spec("matplotlib")
+st.write("matplotlib ditemukan:", found is not None)
 st.title("📊 Dashboard Dataset Tumor Otak")
 
 # Load data
