@@ -24,11 +24,13 @@ model.fit(X, y)
 st.subheader("📝 Masukkan Data Baru")
 user_input = {}
 for col in X.columns:
-    dtype = df[col].dtype if col in df.columns else "float"
-    if dtype == "object":
-        user_input[col] = st.selectbox(f"{col}:", sorted(df[col].unique()))
+    if X[col].dtype == 'uint8':
+        # Kolom dummy kategorikal (contoh: color_category_green)
+        user_input[col] = st.selectbox(f"{col}:", [0, 1])
     else:
-        user_input[col] = st.number_input(f"{col}:", value=float(df[col].mean()))
+        # Kolom numerik
+        user_input[col] = st.number_input(f"{col}:", value=float(X[col].mean()))
+
 
 # Ubah input user menjadi DataFrame
 input_df = pd.DataFrame([user_input])
