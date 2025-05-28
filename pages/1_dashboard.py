@@ -18,11 +18,20 @@ st.dataframe(df)
 st.subheader("📈 Statistik Ringkas")
 st.write(df.describe(include='all'))
 
+# Warna khusus untuk setiap kategori (disesuaikan urutannya)
+warna_kategori = {
+    'ripe': 'red',
+    'pre-conditioned': 'yellow',
+    'hard': 'green',
+    'breaking': 'blue'
+}
+# Ambil warna sesuai urutan kategori yang muncul
+colors = [warna_kategori.get(k, 'gray') for k in ripeness_counts.index]
 # Visualisasi
-st.subheader("📊 Visualisasi Jumlah Data per Kematangan (Ripeness)")
+st.subheader("📊 Statistic Jumlah Data per Kematangan (Ripeness)")
 ripeness_counts = df['ripeness'].value_counts()
 fig, ax = plt.subplots()
-ax.bar(ripeness_counts.index, ripeness_counts.values, color='mediumseagreen')
+ax.bar(ripeness_counts.index, ripeness_counts.values, color=warna_kategori)
 ax.set_xlabel("Tingkat Kematangan")
 ax.set_ylabel("Jumlah Data")
 st.pyplot(fig)
