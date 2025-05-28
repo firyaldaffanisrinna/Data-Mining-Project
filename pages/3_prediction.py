@@ -11,7 +11,10 @@ df = pd.read_csv("avocado_ripeness_dataset.csv")
 X = df.drop(columns=["ripeness"])
 y = df["ripeness"]
 
-# Encode data kategorikal jika ada
+# Simpan nilai maksimum kolom numerik sebelum encoding
+max_numerik = X.select_dtypes(include='number').max()
+
+# One-hot encoding
 X_encoded = pd.get_dummies(X)
 
 # Latih model
@@ -24,12 +27,15 @@ user_input = {}
 
 for col in X_encoded.columns:
     if X_encoded[col].dtype == 'uint8':
+        # Dummy kategorikal
         label = col.split('_')[-1]
         pilihan = st.selectbox(f"{col} (Pilih Ya/Tidak):", ["Tidak", "Ya"])
         user_input[col] = 1 if pilihan == "Ya" else 0
     else:
-        max_val = float(df[col].max()) if col in df.columns else float(X[col].max())
-        user_input[col] = st.number_input(f"{col}:", min_value=0.0, max_value=max_val, value=0.0)
+        # Kolom numerik
+        asal_nama = col.split("_")[0]  # Ambil nama aslinya
+        max_val = max_numerik.get(asal_nama, 100.0)  # Default aman jika tak ditemukan
+        user_input[col] = st.number_input(f"{col}:", min_value=0.0, max_value=float(max_val), value=0.0)
 
 # Konversi ke DataFrame
 input_df = pd.DataFrame([user_input])
