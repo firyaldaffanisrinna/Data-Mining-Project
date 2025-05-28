@@ -2,20 +2,24 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-st.title("📊 Dataset Overview")
+st.title("📊 Dashboard Dataset Tumor Otak")
 
 # Load data
 df = pd.read_csv("dataset.csv")
 
-st.write("### Tabel Data")
+# Tabel data
+st.subheader("📋 Tabel Data")
 st.dataframe(df)
 
-# Visualisasi
-st.write("### Visualisasi Jumlah File")
-fig, ax = plt.subplots()
-ax.bar(df['label'], df['number_of_files'], color='teal')
-ax.set_ylabel("Jumlah File")
-ax.set_xlabel("Label")
-ax.set_title("Jumlah File per Label Tumor")
-st.pyplot(fig)
+# Statistik ringkas
+st.subheader("📈 Statistik Ringkas")
+st.write(df.describe(include='all'))
 
+# Visualisasi
+st.subheader("📊 Visualisasi Jumlah File per Label")
+fig, ax = plt.subplots()
+ax.bar(df['label'], df['number_of_files'], color='mediumseagreen')
+ax.set_xlabel("Jenis Tumor")
+ax.set_ylabel("Jumlah File")
+ax.set_title("Distribusi Data Gambar")
+st.pyplot(fig)
