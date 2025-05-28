@@ -5,10 +5,13 @@ import importlib.util
 found = importlib.util.find_spec("matplotlib")
 st.write("matplotlib ditemukan:", found is not None)
 st.title("📊 Dashboard Dataset Tumor Otak")
-
+#url
+csv_url = "https://raw.githubusercontent.com/firyaldaffanisrinna/Data-Mining-Project/refs/heads/main/avocado_ripeness_dataset.csv"
+st.title("Dashboard avocado ripness")
 # Load data
-df = pd.read_csv("dataset.csv")
-
+def load_data():
+df = pd.read_csv(csv_url)
+return df
 # Tabel data
 st.subheader("📋 Tabel Data")
 st.dataframe(df)
