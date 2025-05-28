@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import train_test_split
 
 st.title("🔍 Prediksi Kematangan Avocado")
 
@@ -14,30 +12,28 @@ X = df.drop(columns=["ripeness"])
 y = df["ripeness"]
 
 # Encode data kategorikal jika ada
-X = pd.get_dummies(X)
+X_encoded = pd.get_dummies(X)
 
-# Latih model (Decision Tree sederhana)
+# Latih model
 model = DecisionTreeClassifier(random_state=42)
-model.fit(X, y)
+model.fit(X_encoded, y)
 
 # Input manual dari user
 st.subheader("📝 Masukkan Data Baru")
 user_input = {}
-for col in X.columns:
-    if X[col].dtype == 'uint8':
-        # Kolom dummy kategorikal (contoh: color_category_green)
-        user_input[col] = st.selectbox(f"{col}:", [0, 1])
+
+for col in X_encoded.columns:
+    if X_encoded[col].dtype == 'uint8':
+        label = col.split('_')[-1]
+        pilihan = st.selectbox(f"{col} (Pilih Ya/Tidak):", ["Tidak", "Ya"])
+        user_input[col] = 1 if pilihan == "Ya" else 0
     else:
-        # Kolom numerik
-        user_input[col] = st.number_input(f"{col}:", value=float(X[col].mean()))
+        max_val = float(df[col].max()) if col in df.columns else float(X[col].max())
+        user_input[col] = st.number_input(f"{col}:", min_value=0.0, max_value=max_val, value=0.0)
 
-
-# Ubah input user menjadi DataFrame
+# Konversi ke DataFrame
 input_df = pd.DataFrame([user_input])
-
-# Sesuaikan kolom dummy (kalau ada)
-input_df = pd.get_dummies(input_df)
-input_df = input_df.reindex(columns=X.columns, fill_value=0)
+input_df = input_df.reindex(columns=X_encoded.columns, fill_value=0)
 
 # Tombol prediksi
 if st.button("Prediksi"):
