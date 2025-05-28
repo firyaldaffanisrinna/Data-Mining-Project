@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import importlib.util
 found = importlib.util.find_spec("matplotlib")
 st.write("matplotlib ditemukan:", found is not None)
-st.title("📊 Dashboard Dataset Tumor Otak")
+st.title("📊 Dashboard Dataset Avocado Ripness")
 
 # Load data
 df = pd.read_csv("avocado_ripeness_dataset.csv")
@@ -18,6 +18,9 @@ st.dataframe(df)
 st.subheader("📈 Statistik Ringkas")
 st.write(df.describe(include='all'))
 
+# Hitung jumlah per kategori ripeness
+ripeness_counts = df['ripeness'].value_counts()
+
 # Warna khusus untuk setiap kategori (disesuaikan urutannya)
 warna_kategori = {
     'ripe': 'red',
@@ -29,7 +32,6 @@ warna_kategori = {
 colors = [warna_kategori.get(k, 'gray') for k in ripeness_counts.index]
 # Visualisasi
 st.subheader("📊 Statistic Jumlah Data per Kematangan (Ripeness)")
-ripeness_counts = df['ripeness'].value_counts()
 fig, ax = plt.subplots()
 ax.bar(ripeness_counts.index, ripeness_counts.values, color=color)
 ax.set_xlabel("Tingkat Kematangan")
