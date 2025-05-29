@@ -1,47 +1,58 @@
 import streamlit as st
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
-st.title("🔍 Prediksi Kematangan Avocado")
+st.title("🥑 Prediksi Kematangan Avocado")
 
 # Load dataset
 df = pd.read_csv("avocado_ripeness_dataset.csv")
 
-# Pisahkan fitur dan target
-X = df.drop(columns=["ripeness"])
-y = df["ripeness"]
+# Tentukan target dan fitur
+target_col = "ripeness"
+X = df.drop(columns=[target_col])
+y = df[target_col]
 
-# Simpan nilai maksimum kolom numerik sebelum encoding
-max_numerik = X.select_dtypes(include='number').max()
+# Simpan info kolom numerik & kategorikal
+numerik_cols = X.select_dtypes(include="number").columns.tolist()
+kategori_cols = X.select_dtypes(include="object").columns.tolist()
 
-# One-hot encoding
+# One-hot encoding untuk kolom kategorikal
 X_encoded = pd.get_dummies(X)
+input_columns = X_encoded.columns
 
-# Latih model
-model = DecisionTreeClassifier(random_state=42)
+# Train model
+model = DecisionTreeClassifier(max_depth=5, random_state=42)
 model.fit(X_encoded, y)
+train_accuracy = model.score(X_encoded, y)
 
-# Input manual dari user
-st.subheader("📝 Masukkan Data Baru")
+# Tampilkan akurasi training
+st.markdown(f"📈 Akurasi model pada data latih: `{train_accuracy*100:.2f}%`")
+
+# Input user
+st.subheader("📝 Masukkan Data Avocado Baru")
 user_input = {}
 
-for col in X_encoded.columns:
-    if X_encoded[col].dtype == 'uint8':
-        # Dummy kategorikal
-        label = col.split('_')[-1]
-        pilihan = st.selectbox(f"{col} (Pilih Ya/Tidak):", ["Tidak", "Ya"])
-        user_input[col] = 1 if pilihan == "Ya" else 0
-    else:
-        # Kolom numerik
-        asal_nama = col.split("_")[0]  # Ambil nama aslinya
-        max_val = max_numerik.get(asal_nama, 100.0)  # Default aman jika tak ditemukan
-        user_input[col] = st.number_input(f"{col}:", min_value=0.0, max_value=float(max_val), value=0.0)
+# Input numerik
+for col in numerik_cols:
+    max_val = float(X[col].max())
+    val = st.number_input(f"{col}", min_value=0.0, max_value=max_val, value=0.0)
+    user_input[col] = val
 
-# Konversi ke DataFrame
-input_df = pd.DataFrame([user_input])
-input_df = input_df.reindex(columns=X_encoded.columns, fill_value=0)
+# Input kategorikal
+for col in kategori_cols:
+    pilihan = st.selectbox(f"{col}", sorted(X[col].unique()))
+    user_input[col] = pilihan
 
-# Tombol prediksi
-if st.button("Prediksi"):
-    prediction = model.predict(input_df)[0]
-    st.success(f"🍃 Prediksi tingkat kematangan: **{prediction}**")
+# Preprocessing input user
+user_df = pd.DataFrame([user_input])
+user_encoded = pd.get_dummies(user_df)
+
+# Pastikan kolom sesuai dengan data training
+user_encoded = user_encoded.reindex(columns=input_columns, fill_value=0)
+
+# Prediksi
+if st.button("🔮 Prediksi"):
+    pred = model.predict(user_encoded)[0]
+    st.success(f"🍃 Prediksi tingkat kematangan: **{pred}**")
