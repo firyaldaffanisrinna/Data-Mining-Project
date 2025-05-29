@@ -38,3 +38,6 @@ ax.set_xlabel("Tingkat Kematangan")
 ax.set_ylabel("Jumlah Data")
 st.pyplot(fig)
 
+# Tombol navigasi ke halaman berikutnya
+if st.button("➡️ Lanjut ke Evaluasi Model"):
+    st.switch_page("pages/2_Model_Performance.py")
