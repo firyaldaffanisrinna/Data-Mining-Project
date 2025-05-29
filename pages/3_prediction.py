@@ -71,6 +71,12 @@ if model_pilihan == "K-Nearest Neighbors":
 else:
     user_encoded_scaled = user_encoded
 
+if st.button("🔍 Prediksi"):
+        hasil = model.predict(user_enc)[0]
+        st.success(f"🍃 Prediksi tingkat kematangan: {hasil}")
+
+    if st.button("⬅️ Kembali ke Evaluasi"):
+        st.switch_page("pages/2_Model_Performance.py")
 # Tombol prediksi
 if st.button("🔮 Prediksi"):
     pred = model.predict(user_encoded_scaled)[0]
