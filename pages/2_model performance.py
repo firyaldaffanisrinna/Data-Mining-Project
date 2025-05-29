@@ -48,3 +48,11 @@ st.pyplot(fig)
 
 st.subheader("📋 Classification Report")
 st.dataframe(pd.DataFrame(report).transpose())
+
+ col1, col2 = st.columns(2)
+    with col1:
+        if st.button("⬅️ Kembali ke Dashboard"):
+            st.switch_page("pages/1_Dashboard.py")
+    with col2:
+        if st.button("➡️ Lanjut ke Prediksi"):
+            st.switch_page("pages/3_Prediction.py")
